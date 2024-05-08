@@ -1,0 +1,105 @@
+li{
+  display: flex;
+  align-items: center;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+.itemname{
+  display: flex;
+  align-items: center;
+}
+
+form{
+  background-color: white;
+  width: 40%;
+  padding: 20px;
+  display: block;
+  margin: auto;
+  border-radius: 6px ;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.169);
+  margin-top: 30px;
+  font-family: "Lato", sans-serif;
+  
+}
+
+body{
+  background-image: url(todo2.jpeg);
+}
+
+h2{
+  text-align: center;
+  color: #222;
+  
+}
+
+li{
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  padding: 0 10px;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  
+  
+}
+
+ol{
+  background-color: #f0f0f0 ;
+  border-radius: 6px;
+  padding: 10px ;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+ol input{
+  height: 20px;
+  border: none;
+  font-size: 16px;
+}
+
+p{
+  line-height: 20px;
+}
+
+pre{
+  line-height: 20px;
+  font-family: "Lato", sans-serif;
+}
+
+#biginput{
+  width: 85%;
+  height: 30px;
+  margin-top: 20px;
+  border: 1px solid grey;
+  border-radius: 6px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+
+button{ 
+  border: none;
+  background-color: white;
+  /* margin: 0 10px; */
+  opacity: 0.5;
+  transition: .3s;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+button:hover{
+  opacity: 1;
+}
+
+.tabs button{
+  width: auto;
+  padding: 0 10px;
+  font-size: 13px;
+  background-color: #f0f0f0;
+}
