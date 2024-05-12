@@ -7,28 +7,37 @@ function App() {
   const [tasks, setTasks] = useState([
     {
       text: "run",
+      tab: 3,
     },
     {
       text: "wash",
+      tab: 3,
     },
     {
       text: "fly",
+      tab: 2,
     },
     {
       text: "clean",
+      tab: 3,
     }
   ])
   const [tabs, setTabs] = useState([
     {
+      id: 0,
       tabname: "all",
+
     },
     {
+      id: 1,
       tabname: "school",
     },
     {
+      id: 2,
       tabname: "work",
     },
     {
+      id: 3,
       tabname: "home",
     }
   ])
@@ -36,7 +45,9 @@ function App() {
   // state input text
   const [inputtext, setInputtext] = useState("")
   const [edittext, setEdittext] = useState("")
-
+  const [activetab, setActivetab] = useState(0)
+  const [finishp, setFinishp] = useState(null)
+  const [renametab, setRenametab] = useState(null)
   function handlepin(event) {
     event.preventDefault()
     console.log("hello");
@@ -47,12 +58,12 @@ function App() {
       let nexttasks = [...tasks]
       // add new task
       nexttasks.push({
-        text: inputtext
+        text: inputtext,
+        tab: activetab,
       })
       return nexttasks
     })
   }
-
   function bin(event, id) {
     event.preventDefault()
     console.log("bin");
@@ -74,7 +85,7 @@ function App() {
     setEdittext(el.text)
   }
 
-  function finishedit(event, id){
+  function finishedit(event, id) {
     event.preventDefault()
     setTasks(() => {
       let nexttasks = [...tasks]
@@ -82,7 +93,18 @@ function App() {
       return nexttasks
     })
     setEditTask(null)
-    
+
+  }
+
+  function createtab (){
+    setTabs(t => {
+      let nexttabs = [...t]
+      nexttabs.push({
+        id: nexttabs.length,
+        tabname: "new tab",
+      })
+      return nexttabs
+    })
   }
 
   return (
@@ -90,40 +112,43 @@ function App() {
       <form action="">
         <h2>ToDo App</h2>
         <div className="tabs">
-        <button>+ tab</button>
-        {
-          tabs.map((el, id) =>
-          <button key={id}>
-            {
-              el.tabname
-            }
-          </button>
-          )
-        }
+          <button  onClick={() => createtab()} type='button' id='tab'>+ tab</button>
+          {
+            tabs.map((el, id) =>
+              <button key={id} onClick={() => setActivetab(id)} onDoubleClick={() => setRenametab(id)} type='button' className={activetab == id ? "activetab" : ""}>
+                {
+                  renametab == id ? <input type="text" name="" id="" /> : el.tabname
+                }
+              </button>
+
+            )
+
+          }
+
         </div>
         <ol>
           {
             // map sets li for every task in tasks array. el is an array task
             tasks.map((el, id) =>
-              <li key={id}>
+              (activetab == 0 || el.tab == activetab) && <li key={id}>
                 <div className="itemname">
-                  <pre>{1+ id + "."}  </pre>
-                {
-                  editTask === id ?
-                    <input size={el.text.length} type="text" value={edittext} onChange={(event) => setEdittext(event.target.value)} />
-                    :
-                    <p>{el.text}</p>
-                }
+                  <pre>{1 + id + "."}  </pre>
+                  {
+                    editTask === id ?
+                      <input size={el.text.length} type="text" value={edittext} onChange={(event) => setEdittext(event.target.value)} />
+                      :
+                      <p onClick={() => setFinishp(id)} className={finishp == id ? "finishp" : ""}>{el.text}</p>
+                  }
                 </div>
                 <div className="options">
                   {
                     editTask === id ?
-                    <button onClick={(event) => finishedit(event, id)}>✅</button>
-                    :
-                    <button type='button' onClick={(event) => edit(event, id, el)}>✍️</button>
+                      <button onClick={(event) => finishedit(event, id)}>✅</button>
+                      :
+                      <button type='button' onClick={(event) => edit(event, id, el)}>✍️</button>
 
                   }
-                  <button  type='button' onClick={(event) => bin(event, id)}>🗑️</button>
+                  <button type='button' onClick={(event) => bin(event, id)}>🗑️</button>
                 </div>
               </li>
             )
@@ -132,12 +157,12 @@ function App() {
         <div className="botinput">
           {/* onchange works everytime when user types a character */}
           <input id='biginput' type="" value={inputtext} onChange={(event) => setInputtext(event.target.value)} />
-          <button disabled={inputtext == ""? true : false} onClick={(event) => handlepin(event)}>📍</button>
+          <button disabled={inputtext == "" ? true : false} onClick={(event) => handlepin(event)}>📍</button>
           <button onClick={(event) => bomb(event)}>💣</button>
         </div>
       </form>
     </div>
   );
 }
-// hw:do styles
+// hw:make a ? button at top of screen which shows the instructions
 export default App;

@@ -101,5 +101,15 @@ button:hover{
   width: auto;
   padding: 0 10px;
   font-size: 13px;
+  border-radius: 4px;
+  margin: 3px;
+  height: 30px;
+}
+
+.activetab{
   background-color: #f0f0f0;
+}
+
+.finishp{
+  text-decoration: line-through;
 }
