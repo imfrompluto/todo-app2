@@ -48,6 +48,8 @@ function App() {
   const [activetab, setActivetab] = useState(0)
   const [finishp, setFinishp] = useState(null)
   const [renametab, setRenametab] = useState(null)
+  const [tabtext, setTabtext] = useState(null)
+  const [showmodal, setShowmodal] = useState(false)
   function handlepin(event) {
     event.preventDefault()
     console.log("hello");
@@ -96,7 +98,7 @@ function App() {
 
   }
 
-  function createtab (){
+  function createtab() {
     setTabs(t => {
       let nexttabs = [...t]
       nexttabs.push({
@@ -107,18 +109,55 @@ function App() {
     })
   }
 
+  function removetab(event, id) {
+    event.preventDefault()
+    console.log("bin");
+    setTabs(() => {
+      let nexttabs = [...tabs]
+      nexttabs.splice(id, 1)
+      return nexttabs
+    })
+  }
+
+
+
+  function finishtab(event) {
+    event.stopPropagation()
+    if (event.target.className == "closetab") {
+      setRenametab(null)
+      console.log("finish tab" + event.target);
+    }
+  }
   return (
     <div className="App">
-      <form action="">
-        <h2>ToDo App</h2>
+      <form className='closetab' onClick={(event) => finishtab(event)} action="">
+        <h2 className='closetab' >ToDo App</h2>
+        <button type='button' onClick={() => setShowmodal(true)} id='rules' >?</button>
+        <div className={"modal " +(showmodal ? "showmodal" : "")} onClick={( ) => setShowmodal(false)}>
+          <div className="box">
+            <h3>instructions</h3>
+            <ol>
+              <li>double click on a tab to modify it</li>
+              <li>press the ✍️ button to modify the task</li>
+              <li>press the ✅ button to confirm the modification</li>
+              <li>press the 🗑️ button to delete the task</li>
+              <li>press the 📍 button to put the task in the list</li>
+              <li>press the 💣 button to delete all the tasks</li>
+            </ol>
+          </div>
+        </div>
         <div className="tabs">
-          <button  onClick={() => createtab()} type='button' id='tab'>+ tab</button>
+          {/*  creates a new tab when clicked */}
+          <button onClick={() => createtab()} type='button' id='tab'>+ tab</button>
           {
             tabs.map((el, id) =>
-              <button key={id} onClick={() => setActivetab(id)} onDoubleClick={() => setRenametab(id)} type='button' className={activetab == id ? "activetab" : ""}>
+              <button key={id} onClick={() => setActivetab(id)} onDoubleClick={() => { setRenametab(id); setTabtext(tabs[id].tabname) }} type='button' className={activetab == id ? "activetab" : ""}>
                 {
-                  renametab == id ? <input type="text" name="" id="" /> : el.tabname
+                  // if `renametab` matches `id`, you can edit the text or it'll display the tab name.
+                  renametab == id ? <input type="text" value={tabtext} onChange={(event) => setTabtext(event.target.value)} name="" id="" /> : el.tabname
                 }
+                {id !== 0 &&
+                <span onClick={(event) => removetab(event, id)}>+</span>}
               </button>
 
             )
@@ -130,6 +169,7 @@ function App() {
           {
             // map sets li for every task in tasks array. el is an array task
             tasks.map((el, id) =>
+            //decides if a list item should be shown based on the active tab and the tab of the element.
               (activetab == 0 || el.tab == activetab) && <li key={id}>
                 <div className="itemname">
                   <pre>{1 + id + "."}  </pre>
@@ -145,6 +185,7 @@ function App() {
                     editTask === id ?
                       <button onClick={(event) => finishedit(event, id)}>✅</button>
                       :
+                      // when you click this button, it will run the `edit` function for editing something.
                       <button type='button' onClick={(event) => edit(event, id, el)}>✍️</button>
 
                   }
@@ -157,6 +198,7 @@ function App() {
         <div className="botinput">
           {/* onchange works everytime when user types a character */}
           <input id='biginput' type="" value={inputtext} onChange={(event) => setInputtext(event.target.value)} />
+          {/* button in code will be clickable only when there's text entered; */}
           <button disabled={inputtext == "" ? true : false} onClick={(event) => handlepin(event)}>📍</button>
           <button onClick={(event) => bomb(event)}>💣</button>
         </div>
@@ -164,5 +206,5 @@ function App() {
     </div>
   );
 }
-// hw:make a ? button at top of screen which shows the instructions
+// hw:add 5 comments and revise over the code
 export default App;
