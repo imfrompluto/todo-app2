@@ -41,6 +41,7 @@ function App() {
       tabname: "home",
     }
   ])
+  const [maintitletext, setMaintitletext] = useState("ToDo App!")
   const [editTask, setEditTask] = useState(null)
   // state input text
   const [inputtext, setInputtext] = useState("")
@@ -65,6 +66,8 @@ function App() {
       })
       return nexttasks
     })
+    setMaintitletext("new task '" +  inputtext+ "' added")
+
   }
   function bin(event, id) {
     event.preventDefault()
@@ -79,6 +82,7 @@ function App() {
   function bomb(event) {
     event.preventDefault()
     setTasks([])
+    setMaintitletext("all tasks deleted")
   }
   function edit(event, id, el) {
     event.preventDefault()
@@ -110,11 +114,21 @@ function App() {
   }
 
   function removetab(event, id) {
-    event.preventDefault()
-    console.log("bin");
+    event.stopPropagation()
+
+
+    let nexttabs = [...tabs]
+    nexttabs.splice(id, 1)
+
+    let nexttasks = [...tasks]
+   
+    console.log(nexttasks.filter((task) => task.tab !== id));
+    setTasks( nexttasks.filter((task) => task.tab !== id))
+    // setTimeout(() => {
+      setActivetab(0)
+    // },0)
+
     setTabs(() => {
-      let nexttabs = [...tabs]
-      nexttabs.splice(id, 1)
       return nexttabs
     })
   }
@@ -124,14 +138,17 @@ function App() {
   function finishtab(event) {
     event.stopPropagation()
     if (event.target.className == "closetab") {
-      setRenametab(null)
       console.log("finish tab" + event.target);
+      let nexttabs = [...tabs]
+      nexttabs[renametab].tabname = tabtext
+      setTabs(nexttabs)
+      setRenametab(null)
     }
   }
   return (
     <div className="App">
       <form className='closetab' onClick={(event) => finishtab(event)} action="">
-        <h2 className='closetab' >ToDo App</h2>
+        <h2 className='closetab' >{maintitletext}</h2>
         <button type='button' onClick={() => setShowmodal(true)} id='rules' >?</button>
         <div className={"modal " +(showmodal ? "showmodal" : "")} onClick={( ) => setShowmodal(false)}>
           <div className="box">
@@ -154,7 +171,7 @@ function App() {
               <button key={id} onClick={() => setActivetab(id)} onDoubleClick={() => { setRenametab(id); setTabtext(tabs[id].tabname) }} type='button' className={activetab == id ? "activetab" : ""}>
                 {
                   // if `renametab` matches `id`, you can edit the text or it'll display the tab name.
-                  renametab == id ? <input type="text" value={tabtext} onChange={(event) => setTabtext(event.target.value)} name="" id="" /> : el.tabname
+                  renametab == id ? <input type="text" value={tabtext} onChange={(event) => setTabtext(event.target.value)} name="" id="" /> : el.tabname == "all" ? el.tabname + " ("+ tasks.length+")" : el.tabname
                 }
                 {id !== 0 &&
                 <span onClick={(event) => removetab(event, id)}>+</span>}
@@ -199,12 +216,13 @@ function App() {
           {/* onchange works everytime when user types a character */}
           <input id='biginput' type="" value={inputtext} onChange={(event) => setInputtext(event.target.value)} />
           {/* button in code will be clickable only when there's text entered; */}
-          <button disabled={inputtext == "" ? true : false} onClick={(event) => handlepin(event)}>📍</button>
+          <button disabled={inputtext == "" ? true : inputtext.length >= 50 ? true : false} onClick={(event) => handlepin(event)}>📍</button>
           <button onClick={(event) => bomb(event)}>💣</button>
         </div>
       </form>
     </div>
   );
 }
-// hw:add 5 comments and revise over the code
+// hw:ron the tab "all" make it have a number next to it in brackets indicating the number of tabs.
+// when you press on the bomb, make the h2 title change to "all tasks deleted"
 export default App;
